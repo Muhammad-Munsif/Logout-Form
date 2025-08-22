@@ -3,8 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Logout Form</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>Login Form</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -31,7 +30,7 @@
         max-width: 400px;
       }
 
-      .profile-card {
+      .login-card {
         background: white;
         border-radius: 10px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -39,247 +38,303 @@
         text-align: center;
       }
 
-      .profile-header {
+      .login-header {
         padding: 30px 20px;
+        background: linear-gradient(135deg, #4a6cf7, #3a5bd9);
+        color: white;
       }
 
-      .profile-pic {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #4a6cf7;
-        margin-bottom: 15px;
+      .login-header h2 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
       }
 
-      .profile-header h2 {
+      .login-header p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .login-form {
+        padding: 25px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
         color: #333;
-        font-size: 1.5rem;
-        margin-bottom: 5px;
+        font-weight: 500;
       }
 
-      .profile-header p {
-        color: #666;
+      .input-with-icon {
+        position: relative;
+      }
+
+      .input-with-icon input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .input-with-icon input:focus {
+        border-color: #4a6cf7;
+        box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+        outline: none;
+      }
+
+      .input-with-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #777;
+      }
+
+      .remember-forgot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
         font-size: 0.9rem;
       }
 
-      .logout-section {
-        padding: 20px;
-        border-top: 1px solid #eee;
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 5px;
       }
 
-      .logout-btn {
+      .remember-me input {
+        accent-color: #4a6cf7;
+      }
+
+      .forgot-password {
+        color: #4a6cf7;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .forgot-password:hover {
+        color: #3a5bd9;
+        text-decoration: underline;
+      }
+
+      .login-btn {
         background: #4a6cf7;
         color: white;
         border: none;
-        padding: 12px 25px;
+        padding: 12px;
         border-radius: 5px;
         font-size: 1rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+        width: 100%;
+        font-weight: 600;
       }
 
-      .logout-btn:hover {
+      .login-btn:hover {
         background: #3a5bd9;
         transform: translateY(-2px);
       }
 
-      /* Modal Styles */
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .modal-content {
-        background: white;
-        padding: 25px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 400px;
-        position: relative;
-        animation: modalopen 0.3s;
-      }
-
-      @keyframes modalopen {
-        from {
-          opacity: 0;
-          transform: scale(0.9);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-
-      .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        color: #666;
-      }
-
-      .modal-content h3 {
-        margin-bottom: 15px;
-        color: #333;
-      }
-
-      .modal-content p {
-        margin-bottom: 20px;
-        color: #666;
-      }
-
-      .modal-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-      }
-
-      .confirm-btn,
-      .cancel-btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+      .signup-section {
+        margin-top: 20px;
         font-size: 0.9rem;
-        transition: all 0.2s;
+        color: #666;
       }
 
-      .confirm-btn {
-        background: #ff4d4d;
-        color: white;
+      .signup-link {
+        color: #4a6cf7;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
       }
 
-      .confirm-btn:hover {
-        background: #e60000;
+      .signup-link:hover {
+        color: #3a5bd9;
+        text-decoration: underline;
       }
 
-      .cancel-btn {
-        background: #eee;
-        color: #333;
-      }
-
-      .cancel-btn:hover {
-        background: #ddd;
+      .error-message {
+        color: #ff4d4d;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: none;
       }
 
       /* Responsive Adjustments */
       @media (max-width: 480px) {
-        .profile-header {
+        .login-header {
           padding: 20px 15px;
         }
 
-        .logout-btn {
-          padding: 10px 20px;
-          font-size: 0.9rem;
-        }
-
-        .modal-content {
+        .login-form {
           padding: 20px 15px;
         }
 
-        .confirm-btn,
-        .cancel-btn {
-          padding: 8px 15px;
+        .remember-forgot {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="profile-card">
-        <div class="profile-header">
-          <img
-            src="images/team-1.jpg"
-            alt="Profile Picture"
-            class="profile-pic"
-          />
-          <h2>John Doe</h2>
-          <p>john.doe@example.com</p>
+      <div class="login-card">
+        <div class="login-header">
+          <h2>Welcome Back</h2>
+          <p>Please sign in to access your account</p>
         </div>
 
-        <div class="logout-section">
-          <button id="logout-btn" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i> Logout
+        <form class="login-form" id="login-form">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div class="error-message" id="email-error">
+              Please enter a valid email address
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <div class="error-message" id="password-error">
+              Password must be at least 6 characters
+            </div>
+          </div>
+
+          <div class="remember-forgot">
+            <div class="remember-me">
+              <input type="checkbox" id="remember" name="remember" />
+              <label for="remember">Remember me</label>
+            </div>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">
+            <i class="fas fa-sign-in-alt"></i> Login
           </button>
-        </div>
+
+          <div class="signup-section">
+            Don't have an account? <a href="#" class="signup-link">Sign up</a>
+          </div>
+        </form>
       </div>
     </div>
 
-    <!-- Logout Confirmation Modal -->
-    <div id="logout-modal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h3>Confirm Logout</h3>
-        <p>Are you sure you want to logout?</p>
-        <div class="modal-buttons">
-          <button id="confirm-logout" class="confirm-btn">Yes, Logout</button>
-          <button id="cancel-logout" class="cancel-btn">Cancel</button>
-        </div>
-      </div>
-    </div>
-
-    <script src="js/script.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Get elements
-        const logoutBtn = document.getElementById("logout-btn");
-        const logoutModal = document.getElementById("logout-modal");
-        const confirmLogout = document.getElementById("confirm-logout");
-        const cancelLogout = document.getElementById("cancel-logout");
-        const closeBtn = document.querySelector(".close-btn");
+        const loginForm = document.getElementById("login-form");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const emailError = document.getElementById("email-error");
+        const passwordError = document.getElementById("password-error");
 
-        // Show modal when logout button is clicked
-        logoutBtn.addEventListener("click", function () {
-          logoutModal.style.display = "flex";
+        // Form validation
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          let isValid = true;
+
+          // Email validation
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(emailInput.value)) {
+            emailError.style.display = "block";
+            emailInput.style.borderColor = "#ff4d4d";
+            isValid = false;
+          } else {
+            emailError.style.display = "none";
+            emailInput.style.borderColor = "#ddd";
+          }
+
+          // Password validation
+          if (passwordInput.value.length < 6) {
+            passwordError.style.display = "block";
+            passwordInput.style.borderColor = "#ff4d4d";
+            isValid = false;
+          } else {
+            passwordError.style.display = "none";
+            passwordInput.style.borderColor = "#ddd";
+          }
+
+          // If form is valid, proceed with login
+          if (isValid) {
+            // Here you would typically:
+            // 1. Send a request to your server to authenticate
+            // 2. Handle the response (store tokens, redirect, etc.)
+
+            // For demonstration, we'll show an alert and redirect
+            alert("Login successful! Redirecting...");
+            window.location.href = "dashboard.html"; // Redirect to dashboard
+
+            // In a real application, you might do something like:
+            // fetch('/api/login', {
+            //   method: 'POST',
+            //   headers: {
+            //     'Content-Type': 'application/json'
+            //   },
+            //   body: JSON.stringify({
+            //     email: emailInput.value,
+            //     password: passwordInput.value
+            //   })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //   if (data.success) {
+            //     // Store authentication token
+            //     localStorage.setItem('authToken', data.token);
+            //     // Redirect to dashboard
+            //     window.location.href = '/dashboard';
+            //   } else {
+            //     alert('Login failed: ' + data.message);
+            //   }
+            // })
+            // .catch(error => {
+            //   console.error('Error:', error);
+            //   alert('An error occurred during login');
+            // });
+          }
         });
 
-        // Hide modal when close button is clicked
-        closeBtn.addEventListener("click", function () {
-          logoutModal.style.display = "none";
+        // Real-time validation
+        emailInput.addEventListener("input", function () {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (emailRegex.test(emailInput.value)) {
+            emailError.style.display = "none";
+            emailInput.style.borderColor = "#ddd";
+          }
         });
 
-        // Hide modal when cancel button is clicked
-        cancelLogout.addEventListener("click", function () {
-          logoutModal.style.display = "none";
-        });
-
-        // Handle actual logout when confirm button is clicked
-        confirmLogout.addEventListener("click", function () {
-          // Here you would typically:
-          // 1. Send a request to your server to invalidate the session
-          // 2. Clear any client-side authentication tokens
-          // 3. Redirect to the login page
-
-          // For demonstration, we'll just show an alert and reload
-          alert("You have been logged out successfully.");
-          window.location.href = "login.html"; // Redirect to login page
-
-          // In a real application, you might do something like:
-          // fetch('/api/logout', { method: 'POST' })
-          //     .then(response => {
-          //         if (response.ok) {
-          //             window.location.href = '/login';
-          //         }
-          //     });
-        });
-
-        // Close modal when clicking outside of it
-        window.addEventListener("click", function (event) {
-          if (event.target === logoutModal) {
-            logoutModal.style.display = "none";
+        passwordInput.addEventListener("input", function () {
+          if (passwordInput.value.length >= 6) {
+            passwordError.style.display = "none";
+            passwordInput.style.borderColor = "#ddd";
           }
         });
       });
