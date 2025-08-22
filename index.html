@@ -5,7 +5,332 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login & Logout System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-face {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .flipped {
+            transform: rotateY(180deg);
+        }
+
+        .login-header, .profile-header {
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #4a6cf7, #3a5bd9);
+            color: white;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #3a5bd9, #4a6cf7);
+        }
+
+        .login-header h2, .profile-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .login-header p, .profile-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-form, .logout-section {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-with-icon input:focus {
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+            outline: none;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .remember-me input {
+            accent-color: #4a6cf7;
+        }
+
+        .forgot-password {
+            color: #4a6cf7;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot-password:hover {
+            color: #3a5bd9;
+            text-decoration: underline;
+        }
+
+        .login-btn, .logout-btn {
+            background: #4a6cf7;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-btn:hover, .logout-btn:hover {
+            background: #3a5bd9;
+            transform: translateY(-2px);
+        }
+
+        .signup-section {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .signup-link {
+            color: #4a6cf7;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .signup-link:hover {
+            color: #3a5bd9;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            animation: modalopen 0.3s;
+        }
+
+        @keyframes modalopen {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .confirm-btn, .cancel-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .confirm-btn {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            background: #e60000;
+        }
+
+        .cancel-btn {
+            background: #eee;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background: #ddd;
+        }
+
+        /* Toggle between forms */
+        .form-toggle {
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 480px) {
+            .login-header, .profile-header {
+                padding: 20px 15px;
+            }
+
+            .login-form, .logout-section {
+                padding: 20px 15px;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -115,6 +440,129 @@
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get elements
+            const authCard = document.getElementById("auth-card");
+            const toggleBtn = document.getElementById("toggle-btn");
+            const toggleText = document.getElementById("toggle-text");
+            const loginForm = document.getElementById("login-form");
+            const logoutBtn = document.getElementById("logout-btn");
+            const logoutModal = document.getElementById("logout-modal");
+            const confirmLogout = document.getElementById("confirm-logout");
+            const cancelLogout = document.getElementById("cancel-logout");
+            const closeBtn = document.querySelector(".close-btn");
+            const emailInput = document.getElementById("email");
+            const passwordInput = document.getElementById("password");
+            const emailError = document.getElementById("email-error");
+            const passwordError = document.getElementById("password-error");
+
+            let isLoginFormVisible = true;
+
+            // Toggle between login and logout forms
+            toggleBtn.addEventListener("click", function () {
+                isLoginFormVisible = !isLoginFormVisible;
+                
+                if (isLoginFormVisible) {
+                    authCard.classList.remove("flipped");
+                    toggleText.textContent = "View logout form";
+                    document.body.style.background = "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)";
+                } else {
+                    authCard.classList.add("flipped");
+                    toggleText.textContent = "View login form";
+                    document.body.style.background = "linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)";
+                }
+            });
+
+            // Login form validation
+            loginForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    emailError.style.display = "block";
+                    emailInput.style.borderColor = "#ff4d4d";
+                    isValid = false;
+                } else {
+                    emailError.style.display = "none";
+                    emailInput.style.borderColor = "#ddd";
+                }
+
+                // Password validation
+                if (passwordInput.value.length < 6) {
+                    passwordError.style.display = "block";
+                    passwordInput.style.borderColor = "#ff4d4d";
+                    isValid = false;
+                } else {
+                    passwordError.style.display = "none";
+                    passwordInput.style.borderColor = "#ddd";
+                }
+
+                // If form is valid, show logout form
+                if (isValid) {
+                    isLoginFormVisible = false;
+                    authCard.classList.add("flipped");
+                    toggleText.textContent = "View login form";
+                    document.body.style.background = "linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)";
+                }
+            });
+
+            // Show modal when logout button is clicked
+            logoutBtn.addEventListener("click", function () {
+                logoutModal.style.display = "flex";
+            });
+
+            // Hide modal when close button is clicked
+            closeBtn.addEventListener("click", function () {
+                logoutModal.style.display = "none";
+            });
+
+            // Hide modal when cancel button is clicked
+            cancelLogout.addEventListener("click", function () {
+                logoutModal.style.display = "none";
+            });
+
+            // Handle actual logout when confirm button is clicked
+            confirmLogout.addEventListener("click", function () {
+                // For demonstration, we'll just show an alert and go back to login form
+                alert("You have been logged out successfully.");
+                logoutModal.style.display = "none";
+                
+                // Return to login form
+                isLoginFormVisible = true;
+                authCard.classList.remove("flipped");
+                toggleText.textContent = "View logout form";
+                document.body.style.background = "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)";
+                
+                // Clear the form
+                loginForm.reset();
+            });
+
+            // Close modal when clicking outside of it
+            window.addEventListener("click", function (event) {
+                if (event.target === logoutModal) {
+                    logoutModal.style.display = "none";
+                }
+            });
+
+            // Real-time validation
+            emailInput.addEventListener("input", function () {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(emailInput.value)) {
+                    emailError.style.display = "none";
+                    emailInput.style.borderColor = "#ddd";
+                }
+            });
+
+            passwordInput.addEventListener("input", function () {
+                if (passwordInput.value.length >= 6) {
+                    passwordError.style.display = "none";
+                    passwordInput.style.borderColor = "#ddd";
+                }
+            });
+        });
+    </script>
 </body>
 </html>
