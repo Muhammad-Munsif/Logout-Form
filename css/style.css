@@ -68,19 +68,16 @@ body {
 .profile-header {
   background: linear-gradient(135deg, #3a5bd9, #4a6cf7);
 }
-
 .login-header h2,
 .profile-header h2 {
   font-size: 1.8rem;
   margin-bottom: 10px;
 }
-
 .login-header p,
 .profile-header p {
   font-size: 0.9rem;
   opacity: 0.9;
 }
-
 .profile-pic {
   width: 100px;
   height: 100px;

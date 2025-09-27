@@ -13,9 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const passwordInput = document.getElementById("password");
   const emailError = document.getElementById("email-error");
   const passwordError = document.getElementById("password-error");
-
   let isLoginFormVisible = true;
-
   // Toggle between login and logout forms
   toggleBtn.addEventListener("click", function () {
     isLoginFormVisible = !isLoginFormVisible;
