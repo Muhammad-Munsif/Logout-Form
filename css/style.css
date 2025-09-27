@@ -50,6 +50,10 @@ body {
   transform: rotateY(180deg);
 }
 
+.card-back * {
+  transform: rotateY(180deg);
+}
+
 .flipped {
   transform: rotateY(180deg);
 }
