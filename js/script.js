@@ -1,4 +1,4 @@
-<script>
+
     document.addEventListener("DOMContentLoaded", function () {
       // Get elements
       const authCard = document.getElementById("auth-card");
@@ -170,4 +170,4 @@
         });
       });
     });
-  </script>
+  
