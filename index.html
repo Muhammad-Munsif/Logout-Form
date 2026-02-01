@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Login & Logout System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      transition: background 0.8s ease;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      perspective: 1000px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      text-align: center;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transform-style: preserve-3d;
+      position: relative;
+      height: 520px;
+      width: 100%;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    .card-face {
+      backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+    }
+
+    .flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Login Header Styles */
+    .login-header {
+      padding: 40px 30px 30px;
+      background: linear-gradient(135deg, #4a6cf7, #3a5bd9);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-30px, -30px) rotate(360deg); }
+    }
+
+    .login-header h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .login-header p {
+      font-size: 1rem;
+      opacity: 0.9;
+      position: relative;
+    }
+
+    /* Profile Header Styles */
+    .profile-header {
+      padding: 40px 30px 30px;
+      background: linear-gradient(135deg, #3a5bd9, #4a6cf7);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255, 255, 255, 0.8);
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .profile-header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    /* Form Styles */
+    .login-form, .logout-section {
+      padding: 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon input {
+      width: 100%;
+      padding: 16px 20px 16px 50px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .input-with-icon input:focus {
+      border-color: #4a6cf7;
+      box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.15);
+      outline: none;
+      background: white;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+      font-size: 1.1rem;
+    }
+
+    /* Remember Me & Forgot Password */
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .remember-me input {
+      width: 18px;
+      height: 18px;
+      accent-color: #4a6cf7;
+      cursor: pointer;
+    }
+
+    .forgot-password {
+      color: #4a6cf7;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      padding: 5px 0;
+    }
+
+    .forgot-password:hover {
+      color: #3a5bd9;
+      text-decoration: underline;
+      transform: translateY(-2px);
+    }
+
+    /* Button Styles */
+    .login-btn, .logout-btn {
+      background: linear-gradient(135deg, #4a6cf7, #3a5bd9);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn::before, .logout-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .login-btn:hover::before, .logout-btn:hover::before {
+      left: 100%;
+    }
+
+    .login-btn:hover, .logout-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+    }
+
+    .login-btn:active, .logout-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Signup Section */
+    .signup-section {
+      margin-top: 25px;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .signup-link {
+      color: #4a6cf7;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-left: 5px;
+    }
+
+    .signup-link:hover {
+      color: #3a5bd9;
+      text-decoration: underline;
+    }
+
+    /* Error Messages */
+    .error-message {
+      color: #ff4d4d;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      display: none;
+      padding-left: 5px;
+      font-weight: 500;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background: white;
+      padding: 35px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+      animation: modalopen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes modalopen {
+      from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #666;
+      transition: color 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .close-btn:hover {
+      color: #333;
+      background: #f5f5f5;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+
+    .modal-content p {
+      margin-bottom: 30px;
+      color: #666;
+      font-size: 1.1rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .confirm-btn, .cancel-btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      min-width: 140px;
+      flex: 1;
+      max-width: 180px;
+    }
+
+    .confirm-btn {
+      background: linear-gradient(135deg, #ff4d4d, #e60000);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+    }
+
+    .confirm-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 77, 77, 0.4);
+    }
+
+    .cancel-btn {
+      background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+      color: #333;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .cancel-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(135deg, #d0d0d0, #b0b0b0);
+    }
+
+    /* Toggle Button */
+    .form-toggle {
+      margin-top: 25px;
+      text-align: center;
+      color: white;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Success Animation */
+    @keyframes success {
+      0% { transform: scale(0.9); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-animation {
+      animation: success 0.6s ease;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .container {
+        max-width: 400px;
+      }
+      
+      .card {
+        height: 500px;
+      }
+      
+      .login-header, .profile-header {
+        padding: 30px 25px 25px;
+      }
+      
+      .login-form, .logout-section {
+        padding: 25px;
+      }
+      
+      .login-btn, .logout-btn {
+        padding: 14px;
+      }
+      
+      .modal-content {
+        padding: 25px;
+      }
+      
+      .confirm-btn, .cancel-btn {
+        padding: 12px 20px;
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      
+      .container {
+        max-width: 100%;
+      }
+      
+      .card {
+        height: auto;
+        min-height: 500px;
+      }
+      
+      .login-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .profile-header h2 {
+        font-size: 1.5rem;
+      }
+      
+      .profile-pic {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .login-form, .logout-section {
+        padding: 20px;
+      }
+      
+      .input-with-icon input {
+        padding: 14px 16px 14px 45px;
+      }
+      
+      .remember-forgot {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .modal-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .confirm-btn, .cancel-btn {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .form-toggle {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    /* Portrait/Landscape Orientation Handling */
+    @media (orientation: landscape) and (max-height: 600px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        max-width: 700px;
+      }
+      
+      .card {
+        height: 400px;
+        flex-direction: row;
+      }
+      
+      .card-face {
+        flex-direction: row;
+      }
+      
+      .login-header, .profile-header {
+        width: 45%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      
+      .login-form, .logout-section {
+        width: 55%;
+        padding: 20px;
+        justify-content: center;
+      }
+      
+      .login-header h2 {
+        font-size: 1.6rem;
+      }
+      
+      .profile-pic {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    /* High-resolution screens */
+    @media (min-width: 1400px) {
+      .container {
+        max-width: 500px;
+      }
+      
+      .card {
+        height: 550px;
+      }
+      
+      .login-header h2 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card" id="auth-card">
+      <div class="card-inner">
+        <!-- Login Form (Front Face) -->
+        <div class="card-face">
+          <div class="login-card">
+            <div class="login-header">
+              <h2>Welcome Back</h2>
+              <p>Please sign in to access your account</p>
+            </div>
+            <form class="login-form" id="login-form">
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-envelope"></i>
+                  <input type="email" id="email" name="email" placeholder="Enter your email" required />
+                </div>
+                <div class="error-message" id="email-error">
+                  Please enter a valid email address
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-with-icon">
+                  <i class="fas fa-lock"></i>
+                  <input type="password" id="password" name="password" placeholder="Enter your password" required />
+                </div>
+                <div class="error-message" id="password-error">
+                  Password must be at least 6 characters
+                </div>
+              </div>
+
+              <div class="remember-forgot">
+                <div class="remember-me">
+                  <input type="checkbox" id="remember" name="remember" />
+                  <label for="remember">Remember me</label>
+                </div>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+              </div>
+
+              <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+              </button>
+
+              <div class="signup-section">
+                Don't have an account?
+                <a href="#" class="signup-link">Sign up</a>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Logout Form (Back Face) -->
+        <div class="card-face card-back">
+          <div class="profile-card">
+            <div class="profile-header">
+              <img
+                src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+                alt="Profile Picture" class="profile-pic" />
+              <h2>John Doe</h2>
+              <p>john.doe@example.com</p>
+            </div>
+            <div class="logout-section">
+              <button id="logout-btn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-toggle">
+      <span id="toggle-text">View logout form</span>
+      <button class="toggle-btn" id="toggle-btn">Click Here</button>
+    </div>
+  </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div id="logout-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h3>Confirm Logout</h3>
+      <p>Are you sure you want to logout?</p>
+      <div class="modal-buttons">
+        <button id="confirm-logout" class="confirm-btn">Yes, Logout</button>
+        <button id="cancel-logout" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get elements
+      const authCard = document.getElementById("auth-card");
+      const toggleBtn = document.getElementById("toggle-btn");
+      const toggleText = document.getElementById("toggle-text");
+      const loginForm = document.getElementById("login-form");
+      const logoutBtn = document.getElementById("logout-btn");
+      const logoutModal = document.getElementById("logout-modal");
+      const confirmLogout = document.getElementById("confirm-logout");
+      const cancelLogout = document.getElementById("cancel-logout");
+      const closeBtn = document.querySelector(".close-btn");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const emailError = document.getElementById("email-error");
+      const passwordError = document.getElementById("password-error");
+      let isLoginFormVisible = true;
+
+      // Toggle between login and logout forms
+      toggleBtn.addEventListener("click", function () {
+        isLoginFormVisible = !isLoginFormVisible;
+
+        if (isLoginFormVisible) {
+          authCard.classList.remove("flipped");
+          toggleText.textContent = "View logout form";
+          toggleBtn.textContent = "Click Here";
+          document.body.style.background =
+            "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)";
+        } else {
+          authCard.classList.add("flipped");
+          toggleText.textContent = "View login form";
+          toggleBtn.textContent = "Click Here";
+          document.body.style.background =
+            "linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)";
+        }
+      });
+
+      // Login form validation
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        let isValid = true;
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value)) {
+          emailError.style.display = "block";
+          emailInput.style.borderColor = "#ff4d4d";
+          isValid = false;
+        } else {
+          emailError.style.display = "none";
+          emailInput.style.borderColor = "#ddd";
+        }
+
+        // Password validation
+        if (passwordInput.value.length < 6) {
+          passwordError.style.display = "block";
+          passwordInput.style.borderColor = "#ff4d4d";
+          isValid = false;
+        } else {
+          passwordError.style.display = "none";
+          passwordInput.style.borderColor = "#ddd";
+        }
+
+        // If form is valid, show logout form
+        if (isValid) {
+          // Add success animation
+          authCard.classList.add("success-animation");
+          setTimeout(() => {
+            authCard.classList.remove("success-animation");
+          }, 600);
+          
+          isLoginFormVisible = false;
+          authCard.classList.add("flipped");
+          toggleText.textContent = "View login form";
+          toggleBtn.textContent = "Click Here";
+          document.body.style.background =
+            "linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)";
+        }
+      });
+
+      // Show modal when logout button is clicked
+      logoutBtn.addEventListener("click", function () {
+        logoutModal.style.display = "flex";
+      });
+
+      // Hide modal when close button is clicked
+      closeBtn.addEventListener("click", function () {
+        logoutModal.style.display = "none";
+      });
+
+      // Hide modal when cancel button is clicked
+      cancelLogout.addEventListener("click", function () {
+        logoutModal.style.display = "none";
+      });
+
+      // Handle actual logout when confirm button is clicked
+      confirmLogout.addEventListener("click", function () {
+        // Add animation to modal
+        const modalContent = document.querySelector('.modal-content');
+        modalContent.style.animation = 'modalopen 0.3s reverse forwards';
+        
+        setTimeout(() => {
+          logoutModal.style.display = "none";
+          modalContent.style.animation = '';
+          
+          // Add success animation to card
+          authCard.classList.add("success-animation");
+          
+          // Return to login form
+          isLoginFormVisible = true;
+          authCard.classList.remove("flipped");
+          toggleText.textContent = "View logout form";
+          toggleBtn.textContent = "Click Here";
+          document.body.style.background =
+            "linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)";
+
+          // Clear the form
+          loginForm.reset();
+          
+          setTimeout(() => {
+            authCard.classList.remove("success-animation");
+          }, 600);
+          
+        }, 300);
+      });
+
+      // Close modal when clicking outside of it
+      window.addEventListener("click", function (event) {
+        if (event.target === logoutModal) {
+          logoutModal.style.display = "none";
+        }
+      });
+
+      // Real-time validation
+      emailInput.addEventListener("input", function () {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailRegex.test(emailInput.value)) {
+          emailError.style.display = "none";
+          emailInput.style.borderColor = "#e0e0e0";
+        }
+      });
+
+      passwordInput.addEventListener("input", function () {
+        if (passwordInput.value.length >= 6) {
+          passwordError.style.display = "none";
+          passwordInput.style.borderColor = "#e0e0e0";
+        }
+      });
+
+      // Handle orientation changes
+      window.addEventListener("orientationchange", function() {
+        // Force a reflow to fix any rendering issues
+        setTimeout(function() {
+          authCard.style.transform = 'none';
+          setTimeout(function() {
+            authCard.style.transform = '';
+          }, 10);
+        }, 100);
+      });
+
+      // Add smooth transitions to inputs
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          this.parentElement.style.transform = 'scale(1.02)';
+        });
+        
+        input.addEventListener('blur', function() {
+          this.parentElement.style.transform = 'scale(1)';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
